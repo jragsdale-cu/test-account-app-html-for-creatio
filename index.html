@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Loan Application — ISCU</title>
+  <title>New Account Application — ISCU</title>
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;600;700&display=swap" rel="stylesheet">
   <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.11.2/jquery.min.js"></script>
@@ -126,8 +126,8 @@
 
 <div class="form-wrapper">
   <div class="form-header">
-    <h1>Loan Application</h1>
-    <p>Complete the form below. A team member will follow up within one business day.</p>
+    <h1>New Account Application</h1>
+    <p>Interested in joining ISCU? Fill out the form below and a team member will reach out within one business day.</p>
   </div>
 
   <div class="form-card" id="formCard">
@@ -150,39 +150,43 @@
       </div>
 
       <div class="field">
-        <label>Phone</label>
-        <input type="tel" id="phone" placeholder="(309) 000-0000" />
+        <label>Phone <span class="req">*</span></label>
+        <input type="tel" id="phone" placeholder="(309) 000-0000" required />
       </div>
 
       <div class="field">
-        <label>Member Account Number</label>
-        <input type="text" id="accountNumber" />
-      </div>
-
-      <div class="field">
-        <label>Loan Type <span class="req">*</span></label>
-        <select id="loanType" required>
-          <option value="" disabled selected>Select a loan type</option>
-          <option value="Auto">Auto</option>
-          <option value="Personal">Personal</option>
-          <option value="Home Equity">Home Equity</option>
-          <option value="Credit Card">Credit Card</option>
+        <label>Account Type <span class="req">*</span></label>
+        <select id="accountType" required>
+          <option value="" disabled selected>Select an account type</option>
+          <option value="Savings">Savings</option>
+          <option value="Checking">Checking</option>
+          <option value="Savings & Checking">Savings & Checking</option>
+          <option value="Youth Savings">Youth Savings</option>
         </select>
       </div>
 
       <div class="field">
-        <label>Requested Amount</label>
-        <input type="text" id="loanAmount" placeholder="$10,000" />
+        <label>How did you hear about us?</label>
+        <select id="referralSource">
+          <option value="" disabled selected>Select one</option>
+          <option value="Friend or Family">Friend or Family</option>
+          <option value="Social Media">Social Media</option>
+          <option value="ISU Campus">ISU Campus</option>
+          <option value="Drive By">Drive By</option>
+          <option value="Google Search">Google Search</option>
+          <option value="Other">Other</option>
+        </select>
       </div>
 
       <div class="field">
         <label>Notes</label>
-        <textarea id="notes" placeholder="Anything else we should know?"></textarea>
+        <textarea id="notes" placeholder="Any questions or additional info?"></textarea>
       </div>
 
       <!-- Hidden fields built on submit -->
       <input type="hidden" id="fullName" />
       <input type="hidden" id="caseSubject" />
+      <input type="hidden" id="caseType" value="New Account Application" />
 
       <button type="submit" class="btn-submit" id="submitBtn">Submit Application</button>
     </form>
@@ -190,34 +194,22 @@
 
   <div class="success-msg" id="successMsg">
     <h2>Application Received</h2>
-    <p>Thank you. A team member will be in touch soon.</p>
+    <p>Thank you for your interest in ISCU. A team member will be in touch soon.</p>
   </div>
 </div>
 
 <script>
-// ============================================================
-// CREATIO CONFIG — your live instance
-// ============================================================
 var config = {
   fields: {
-    "Name":              "#fullName",        // Contact name on the Case
-    "Email":             "#email",           // Contact email
-    "Phone":             "#phone",           // Contact phone
-    "Subject":           "#caseSubject",     // Case subject (built automatically)
-    "Symptoms":          "#notes",           // Case description
-    "TAIAccountNumber":  "#accountNumber",   // Member Account Number
-    "TAIAmount":         "#loanAmount"       // Requested loan amount
-    // ---------------------------------------------------------
-    // Other TAI fields available on your Case object:
-    // "TAICaseType":           "#someField",
-    // "TAIProduct":            "#someField",
-    // "TAISubCategory":        "#someField",
-    // "TAIRequestCategory":    "#someField",
-    // "TAIDepartment":         "#someField",
-    // "TAILoanNumber":         "#someField",
-    // "TAIAdditionalComments": "#someField",
-    // "TAIComments":           "#someField",
-    // ---------------------------------------------------------
+    "Name":              "#fullName",
+    "Email":             "#email",
+    "Phone":             "#phone",
+    "Subject":           "#caseSubject",
+    "Symptoms":          "#notes",
+    "TAICaseType":       "#caseType",
+    "TAIAdditionalComments": "#referralSource"
+    // If you have a dedicated referral source TAI field,
+    // swap TAIAdditionalComments for the correct one.
   },
   contactFields: {
     "FullName": "#fullName",
@@ -230,31 +222,21 @@ var config = {
   redirectUrl: ""
 };
 
-// ============================================================
-// BUILD HIDDEN FIELDS + SUBMIT TO CREATIO
-// ============================================================
 function prepareAndSubmit() {
   var btn = document.getElementById("submitBtn");
   btn.disabled = true;
   btn.textContent = "Submitting...";
 
-  // Build full name from first + last
   var first = document.getElementById("firstName").value.trim();
   var last = document.getElementById("lastName").value.trim();
   document.getElementById("fullName").value = first + " " + last;
 
-  // Build a scannable case subject
-  var loanType = document.getElementById("loanType").value;
-  var amount = document.getElementById("loanAmount").value.trim();
+  var acctType = document.getElementById("accountType").value;
   document.getElementById("caseSubject").value =
-    "Loan App: " + loanType +
-    (amount ? " | " + amount : "") +
-    " | " + first + " " + last;
+    "New Account: " + acctType + " | " + first + " " + last;
 
-  // Hand off to Creatio's landing library
   createObject();
 
-  // Show success state after a short delay
   setTimeout(function() {
     document.getElementById("formCard").style.display = "none";
     document.getElementById("successMsg").style.display = "block";
