@@ -186,7 +186,7 @@
       <!-- Hidden fields built on submit -->
       <input type="hidden" id="fullName" />
       <input type="hidden" id="caseSubject" />
-      <input type="hidden" id="caseType" value="New Account Application" />
+      <input type="hidden" id="newAccountFlag" value="true" />
 
       <button type="submit" class="btn-submit" id="submitBtn">Submit Application</button>
     </form>
@@ -206,10 +206,8 @@ var config = {
     "Phone":             "#phone",
     "Subject":           "#caseSubject",
     "Symptoms":          "#notes",
-    "TAICaseType":       "#caseType",
+    "TAINewAccount":     "#newAccountFlag",
     "TAIAdditionalComments": "#referralSource"
-    // If you have a dedicated referral source TAI field,
-    // swap TAIAdditionalComments for the correct one.
   },
   contactFields: {
     "FullName": "#fullName",
