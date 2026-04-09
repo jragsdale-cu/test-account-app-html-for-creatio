@@ -6,6 +6,9 @@
   <title>Loan Application — ISCU</title>
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;600;700&display=swap" rel="stylesheet">
+  <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.11.2/jquery.min.js"></script>
+  <script src="https://webtracking-v01.bpmonline.com/JS/track-cookies.js"></script>
+  <script src="https://webtracking-v01.creatio.com/JS/create-object.js"></script>
   <style>
     *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
 
@@ -14,7 +17,6 @@
       --card: #ffffff;
       --primary: #1a5632;
       --primary-hover: #143f26;
-      --accent: #2c8c50;
       --text: #1e1e1e;
       --text-muted: #5a5f6b;
       --border: #d4d7de;
@@ -37,27 +39,11 @@
       padding: 40px 16px;
     }
 
-    .form-wrapper {
-      width: 100%;
-      max-width: 520px;
-    }
+    .form-wrapper { width: 100%; max-width: 520px; }
 
-    .form-header {
-      margin-bottom: 32px;
-    }
-
-    .form-header h1 {
-      font-size: 22px;
-      font-weight: 700;
-      color: var(--primary);
-      margin-bottom: 6px;
-    }
-
-    .form-header p {
-      font-size: 14px;
-      color: var(--text-muted);
-      line-height: 1.5;
-    }
+    .form-header { margin-bottom: 32px; }
+    .form-header h1 { font-size: 22px; font-weight: 700; color: var(--primary); margin-bottom: 6px; }
+    .form-header p { font-size: 14px; color: var(--text-muted); line-height: 1.5; }
 
     .form-card {
       background: var(--card);
@@ -66,30 +52,12 @@
       padding: 32px;
     }
 
-    .field {
-      margin-bottom: 20px;
-    }
+    .field { margin-bottom: 20px; }
+    .field:last-of-type { margin-bottom: 28px; }
+    .field label { display: block; font-size: 13px; font-weight: 600; margin-bottom: 6px; }
+    .field label .req { color: var(--error); margin-left: 2px; }
 
-    .field:last-of-type {
-      margin-bottom: 28px;
-    }
-
-    .field label {
-      display: block;
-      font-size: 13px;
-      font-weight: 600;
-      color: var(--text);
-      margin-bottom: 6px;
-    }
-
-    .field label .required {
-      color: var(--error);
-      margin-left: 2px;
-    }
-
-    .field input,
-    .field select,
-    .field textarea {
+    .field input, .field select, .field textarea {
       width: 100%;
       padding: 10px 12px;
       font-family: 'DM Sans', sans-serif;
@@ -102,17 +70,12 @@
       outline: none;
     }
 
-    .field input:focus,
-    .field select:focus,
-    .field textarea:focus {
+    .field input:focus, .field select:focus, .field textarea:focus {
       border-color: var(--border-focus);
       background: #fff;
     }
 
-    .field textarea {
-      resize: vertical;
-      min-height: 70px;
-    }
+    .field textarea { resize: vertical; min-height: 70px; }
 
     .field select {
       cursor: pointer;
@@ -123,14 +86,8 @@
       padding-right: 36px;
     }
 
-    .row {
-      display: flex;
-      gap: 16px;
-    }
-
-    .row .field {
-      flex: 1;
-    }
+    .row { display: flex; gap: 16px; }
+    .row .field { flex: 1; }
 
     .btn-submit {
       width: 100%;
@@ -145,17 +102,9 @@
       cursor: pointer;
       transition: background 0.15s ease;
     }
+    .btn-submit:hover { background: var(--primary-hover); }
+    .btn-submit:disabled { opacity: 0.6; cursor: not-allowed; }
 
-    .btn-submit:hover {
-      background: var(--primary-hover);
-    }
-
-    .btn-submit:disabled {
-      opacity: 0.6;
-      cursor: not-allowed;
-    }
-
-    /* Success state */
     .success-msg {
       display: none;
       padding: 20px;
@@ -164,49 +113,8 @@
       border-radius: var(--radius);
       text-align: center;
     }
-
-    .success-msg h2 {
-      font-size: 18px;
-      color: var(--primary);
-      margin-bottom: 6px;
-    }
-
-    .success-msg p {
-      font-size: 14px;
-      color: var(--text-muted);
-    }
-
-    /* Status bar for testing */
-    .status-bar {
-      margin-top: 16px;
-      padding: 12px 16px;
-      border-radius: 6px;
-      font-size: 13px;
-      font-family: monospace;
-      display: none;
-      word-break: break-all;
-    }
-
-    .status-bar.info {
-      display: block;
-      background: #eef2ff;
-      border: 1px solid #c7d2fe;
-      color: #3730a3;
-    }
-
-    .status-bar.error {
-      display: block;
-      background: #fef2f2;
-      border: 1px solid #fecaca;
-      color: #991b1b;
-    }
-
-    .status-bar.success {
-      display: block;
-      background: #f0fdf4;
-      border: 1px solid #bbf7d0;
-      color: #166534;
-    }
+    .success-msg h2 { font-size: 18px; color: var(--primary); margin-bottom: 6px; }
+    .success-msg p { font-size: 14px; color: var(--text-muted); }
 
     @media (max-width: 480px) {
       .row { flex-direction: column; gap: 0; }
@@ -222,29 +130,22 @@
     <p>Complete the form below. A team member will follow up within one business day.</p>
   </div>
 
-  <div class="form-card">
-    <!-- 
-      ============================================================
-      FORM FIELDS
-      Each input id maps to a Creatio Case field in the config below.
-      Add or remove fields here, then update the config to match.
-      ============================================================
-    -->
-    <form id="loanAppForm" onsubmit="submitToCreatio(); return false;">
+  <div class="form-card" id="formCard">
+    <form class="mainForm" name="landingForm" onsubmit="prepareAndSubmit(); return false;">
 
       <div class="row">
         <div class="field">
-          <label>First Name <span class="required">*</span></label>
+          <label>First Name <span class="req">*</span></label>
           <input type="text" id="firstName" required />
         </div>
         <div class="field">
-          <label>Last Name <span class="required">*</span></label>
+          <label>Last Name <span class="req">*</span></label>
           <input type="text" id="lastName" required />
         </div>
       </div>
 
       <div class="field">
-        <label>Email <span class="required">*</span></label>
+        <label>Email <span class="req">*</span></label>
         <input type="email" id="email" required />
       </div>
 
@@ -254,7 +155,12 @@
       </div>
 
       <div class="field">
-        <label>Loan Type <span class="required">*</span></label>
+        <label>Member Account Number</label>
+        <input type="text" id="accountNumber" />
+      </div>
+
+      <div class="field">
+        <label>Loan Type <span class="req">*</span></label>
         <select id="loanType" required>
           <option value="" disabled selected>Select a loan type</option>
           <option value="Auto">Auto</option>
@@ -274,184 +180,97 @@
         <textarea id="notes" placeholder="Anything else we should know?"></textarea>
       </div>
 
+      <!-- Hidden fields built on submit -->
+      <input type="hidden" id="fullName" />
+      <input type="hidden" id="caseSubject" />
+
       <button type="submit" class="btn-submit" id="submitBtn">Submit Application</button>
     </form>
   </div>
 
-  <!-- Success message shown after submit -->
   <div class="success-msg" id="successMsg">
     <h2>Application Received</h2>
     <p>Thank you. A team member will be in touch soon.</p>
   </div>
-
-  <!-- Status bar for testing / debugging -->
-  <div class="status-bar" id="statusBar"></div>
 </div>
-
 
 <script>
 // ============================================================
-// CREATIO CONFIGURATION
-// 
-// 1. In Creatio, go to Landing Pages and Web Forms
-// 2. Click New > select "Case" (or your custom object type)
-// 3. Set the name, domain, and save
-// 4. Copy the generated serviceUrl and landingId below
-// 5. Map each field name (left) to the CSS selector (right)
-//
-// The field names on the LEFT must match the Creatio Case 
-// column names. Common Case fields:
-//   - Subject
-//   - Description  
-//   - Contact (or contact name fields)
-//   - Account
-//   - Category
-//   - Priority
-//   - Plus any custom Usr* fields you've added
+// CREATIO CONFIG — your live instance
 // ============================================================
-
 var config = {
-
-  // REPLACE THESE with your actual Creatio values:
-  serviceUrl: "https://YOUR-INSTANCE.creatio.com/0/ServiceModel/GeneratedObjectWebFormService.svc/SaveWebFormObjectData",
-  landingId: "YOUR-LANDING-PAGE-ID-GUID",
-  redirectUrl: "",  // optional: URL to redirect after submit
-
-  // Map Creatio Case fields → CSS selectors on this form.
-  // Left side = Creatio column name
-  // Right side = CSS selector for the form input
   fields: {
-    "Subject":      "#loanType",       // Case subject — we'll build it dynamically below
-    "Description":  "#notes",          // Case description
-    // Add more Case fields as needed, e.g.:
-    // "UsrLoanAmount": "#loanAmount",
-    // "UsrLoanType":   "#loanType",
-    // "Priority":      "#priority",
+    "Name":              "#fullName",        // Contact name on the Case
+    "Email":             "#email",           // Contact email
+    "Phone":             "#phone",           // Contact phone
+    "Subject":           "#caseSubject",     // Case subject (built automatically)
+    "Symptoms":          "#notes",           // Case description
+    "TAIAccountNumber":  "#accountNumber",   // Member Account Number
+    "TAIAmount":         "#loanAmount"       // Requested loan amount
+    // ---------------------------------------------------------
+    // Other TAI fields available on your Case object:
+    // "TAICaseType":           "#someField",
+    // "TAIProduct":            "#someField",
+    // "TAISubCategory":        "#someField",
+    // "TAIRequestCategory":    "#someField",
+    // "TAIDepartment":         "#someField",
+    // "TAILoanNumber":         "#someField",
+    // "TAIAdditionalComments": "#someField",
+    // "TAIComments":           "#someField",
+    // ---------------------------------------------------------
   },
-
-  // Contact fields — Creatio uses these to match or create a Contact record
   contactFields: {
-    "FullName": "#fullNameHidden",
+    "FullName": "#fullName",
     "Phone":    "#phone",
     "Email":    "#email"
-  }
+  },
+  customFields: {},
+  landingId: "d9570f27-7b40-4ade-b4d9-2bdb863f35b1",
+  serviceUrl: "https://itsmycreditunion.creatio.com/0/ServiceModel/GeneratedObjectWebFormService.svc/SaveWebFormObjectData",
+  redirectUrl: ""
 };
 
-
 // ============================================================
-// SUBMIT FUNCTION
-// This reads form values, builds the payload, and posts to 
-// Creatio's web form service endpoint.
+// BUILD HIDDEN FIELDS + SUBMIT TO CREATIO
 // ============================================================
-
-function submitToCreatio() {
+function prepareAndSubmit() {
   var btn = document.getElementById("submitBtn");
-  var statusBar = document.getElementById("statusBar");
   btn.disabled = true;
   btn.textContent = "Submitting...";
 
-  // Build full name into hidden field for contact matching
+  // Build full name from first + last
   var first = document.getElementById("firstName").value.trim();
   var last = document.getElementById("lastName").value.trim();
-  var fullNameField = document.getElementById("fullNameHidden");
-  if (fullNameField) {
-    fullNameField.value = first + " " + last;
-  }
+  document.getElementById("fullName").value = first + " " + last;
 
-  // Build a descriptive subject line for the Case
+  // Build a scannable case subject
   var loanType = document.getElementById("loanType").value;
   var amount = document.getElementById("loanAmount").value.trim();
-  var subjectField = document.getElementById("subjectHidden");
-  if (subjectField) {
-    subjectField.value = "Loan App: " + loanType + (amount ? " — " + amount : "") + " — " + first + " " + last;
-  }
+  document.getElementById("caseSubject").value =
+    "Loan App: " + loanType +
+    (amount ? " | " + amount : "") +
+    " | " + first + " " + last;
 
-  // Collect field values based on config
-  var formData = [];
+  // Hand off to Creatio's landing library
+  createObject();
 
-  // Process main fields
-  for (var fieldName in config.fields) {
-    var selector = config.fields[fieldName];
-    var el = document.querySelector(selector);
-    if (el) {
-      formData.push({ name: fieldName, value: el.value || "" });
-    }
-  }
-
-  // Process contact fields
-  for (var contactField in config.contactFields) {
-    var selector = config.contactFields[contactField];
-    var el = document.querySelector(selector);
-    if (el) {
-      formData.push({ name: contactField, value: el.value || "" });
-    }
-  }
-
-  // Build Creatio payload
-  var payload = {
-    formId: config.landingId,
-    formData: formData
-  };
-
-  // --------------------------------------------------------
-  // TEST MODE: If config isn't set up yet, just log the payload
-  // --------------------------------------------------------
-  if (config.serviceUrl.indexOf("YOUR-INSTANCE") !== -1) {
-    showStatus("info",
-      "TEST MODE — No Creatio URL configured yet.\n\n" +
-      "Payload that would be sent:\n" +
-      JSON.stringify(payload, null, 2)
-    );
-    btn.disabled = false;
-    btn.textContent = "Submit Application";
-    return;
-  }
-
-  // --------------------------------------------------------
-  // LIVE MODE: Post to Creatio
-  // --------------------------------------------------------
-  fetch(config.serviceUrl, {
-    method: "POST",
-    headers: { "Content-Type": "application/json" },
-    body: JSON.stringify(payload)
-  })
-  .then(function(response) {
-    if (response.ok) {
-      document.querySelector(".form-card").style.display = "none";
-      document.getElementById("successMsg").style.display = "block";
-      showStatus("success", "Case created in Creatio.");
-
-      if (config.redirectUrl) {
-        setTimeout(function() {
-          window.location.href = config.redirectUrl;
-        }, 1500);
-      }
-    } else {
-      response.text().then(function(text) {
-        showStatus("error", "Creatio returned " + response.status + ": " + text);
-      });
-      btn.disabled = false;
-      btn.textContent = "Submit Application";
-    }
-  })
-  .catch(function(err) {
-    showStatus("error", "Network error: " + err.message);
-    btn.disabled = false;
-    btn.textContent = "Submit Application";
-  });
+  // Show success state after a short delay
+  setTimeout(function() {
+    document.getElementById("formCard").style.display = "none";
+    document.getElementById("successMsg").style.display = "block";
+  }, 1500);
 }
 
-function showStatus(type, msg) {
-  var bar = document.getElementById("statusBar");
-  bar.className = "status-bar " + type;
-  bar.textContent = msg;
-  bar.style.display = "block";
+function createObject() {
+  landing.createObjectFromLanding(config);
 }
+
+function initLanding() {
+  landing.initLanding(config);
+}
+
+jQuery(document).ready(initLanding);
 </script>
-
-<!-- Hidden fields used to build computed values for Creatio -->
-<input type="hidden" id="fullNameHidden" />
-<input type="hidden" id="subjectHidden" />
 
 </body>
 </html>
